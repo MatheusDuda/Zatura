@@ -1,12 +1,14 @@
 from utils import *
-
+from powerup import PowerUpManager
 
 class Galaxy():
-
     def __init__(self, rect):
         self.rect = rect
         self.entities = {}
         self.entity_id = 0
+        # Initialize PowerUpManager
+        self.powerup_manager = PowerUpManager(self)
+        print("Galaxy initialized with PowerUpManager")  # Debug print
 
     def add_entity(self, entity):
         self.entities[self.entity_id] = entity
@@ -31,12 +33,15 @@ class Galaxy():
 
     def update(self, time_passed, event_list):
         time_passed_seconds = time_passed / 1000.0
+        
+        # Update PowerUpManager
+        self.powerup_manager.update(time_passed_seconds)
+        
+        # Update all entities
         for entity in list(self.entities.values()): 
             entity.update(time_passed_seconds, event_list)
             if not self.in_screen_space(entity.position): 
-                # entities require authorization to leave the galaxy,
-                # thus we must keep entities inside it !
-                if entity.name == 'asteroid' or entity.name == 'ship':
+                if entity.name in ['asteroid', 'ship', 'powerup']:
                     self.wrap_coordinates(entity.position)
                 elif entity.name == 'blast':
                     entity.dead = True
@@ -47,9 +52,9 @@ class Galaxy():
             entity.render(surface)
 
     def cleanup(self): 
-        # remove all dead entities
+        # Remove all dead entities
         for entity in list(self.entities.values()):
-            if entity.dead == True:
+            if entity.dead:
                 self.remove_entity(entity)
 
     def wrap_coordinates(self, position):
