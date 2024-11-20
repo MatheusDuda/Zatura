@@ -3,30 +3,25 @@ from pygame.math import Vector2
 from random import choice, random
 from utils import *
 
-# Custom events for power-ups
-UNSHIELD_EVENT = pygame.USEREVENT + 1
-END_RAPID_FIRE_EVENT = pygame.USEREVENT + 2
-END_TRIPLE_SHOT_EVENT = pygame.USEREVENT + 3
-
 # Power-up types configuration
 POWERUP_TYPES = {
     'SHIELD': {
-        'color': (0, 191, 255),
-        'duration': 10,
+        'color': BLUE,
+        'duration': 8,
         'sprite_path': 'res/shield_powerup.png'
     },
     'RAPID_FIRE': {
-        'color': (255, 69, 0),
-        'duration': 5,
+        'color': RED,
+        'duration': 7,
         'sprite_path': 'res/rapid_powerup.png'
     },
     'TRIPLE_SHOT': {
-        'color': (50, 205, 50),
+        'color': GREEN,
         'duration': 7,
         'sprite_path': 'res/triple_powerup.png'
     },
     'EXTRA_LIFE': {
-        'color': (255, 20, 147),
+        'color': MAGENTA,
         'duration': 0,
         'sprite_path': 'res/life_powerup.png'
     }
@@ -112,31 +107,21 @@ class PowerUp:
         collision_distance = 20
         return (self.position - other_entity.position).length() < collision_distance
             
+    # Em powerup.py, na função apply_effect():
     def apply_effect(self, ship):
-        if self.collected:
-            return
-            
-        print(f"Applying power-up effect: {self.type}")
-        
         if self.type == 'SHIELD':
             ship.shielded = True
-            # Ensure the ship has the shielded attribute
-            if not hasattr(ship, 'shielded'):
-                setattr(ship, 'shielded', True)
+            ship.shield_duration = self.duration
             pygame.time.set_timer(UNSHIELD_EVENT, int(self.duration * 1000), 1)
-            
+        
         elif self.type == 'RAPID_FIRE':
-            # Ensure the ship has the rapid_fire attribute
-            if not hasattr(ship, 'rapid_fire'):
-                setattr(ship, 'rapid_fire', True)
             ship.rapid_fire = True
+            ship.rapid_fire_duration = self.duration
             pygame.time.set_timer(END_RAPID_FIRE_EVENT, int(self.duration * 1000), 1)
-            
+        
         elif self.type == 'TRIPLE_SHOT':
-            # Ensure the ship has the triple_shot attribute
-            if not hasattr(ship, 'triple_shot'):
-                setattr(ship, 'triple_shot', True)
             ship.triple_shot = True
+            ship.triple_shot_duration = self.duration
             pygame.time.set_timer(END_TRIPLE_SHOT_EVENT, int(self.duration * 1000), 1)
             
         elif self.type == 'EXTRA_LIFE':
@@ -151,8 +136,7 @@ class PowerUpManager:
         self.spawn_interval = 15
         self.spawn_chance = 0.7
         self.max_powerups = 3
-        print("PowerUpManager initialized")
-        
+
     def update(self, time_passed):
         self.spawn_timer += time_passed
         if self.spawn_timer >= self.spawn_interval:
@@ -168,4 +152,3 @@ class PowerUpManager:
             powerup_type = choice(list(POWERUP_TYPES.keys()))
             new_powerup = PowerUp(self.galaxy, powerup_type)
             self.galaxy.add_entity(new_powerup)
-            print(f"Spawned {powerup_type} power-up at {new_powerup.position}")

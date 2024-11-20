@@ -9,10 +9,11 @@ SCALE_FACTOR = 3
 SPEED = 90.0  # pixels per second
 ANGULAR_SPEED = 21.0  # degrees per second
 ASTEROID_WIREFRAME = [
-    Vector2(-20.0, 20.0), Vector2(-25.0, 5.0), Vector2(-25.0, -10.0),
-    Vector2(-5.0, -10.0), Vector2(-10.0, -20.0), Vector2(5.0, -20.0),
-    Vector2(20.0, -10.0), Vector2(20.0, -5.0), Vector2(0.0, 0.0),
-    Vector2(20.0, 10.0), Vector2(10.0, 20.0), Vector2(0.0, 15.0)
+    Vector2(-30.0, 25.0), Vector2(-40.0, 10.0), Vector2(-35.0, -5.0),
+    Vector2(-20.0, -15.0), Vector2(-10.0, -25.0), Vector2(5.0, -30.0),
+    Vector2(25.0, -20.0), Vector2(35.0, -10.0), Vector2(30.0, 5.0),
+    Vector2(20.0, 15.0), Vector2(10.0, 25.0), Vector2(-5.0, 30.0),
+    Vector2(-15.0, 20.0)
 ]
 
 

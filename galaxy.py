@@ -8,7 +8,6 @@ class Galaxy():
         self.entity_id = 0
         # Initialize PowerUpManager
         self.powerup_manager = PowerUpManager(self)
-        print("Galaxy initialized with PowerUpManager")  # Debug print
 
     def add_entity(self, entity):
         self.entities[self.entity_id] = entity

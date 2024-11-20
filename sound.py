@@ -1,5 +1,4 @@
 import os
-import pygame
 from pygame import mixer
 
 class Sound:
@@ -12,9 +11,9 @@ class Sound:
             
             # Volume inicial para cada tipo de som
             cls._volume_settings = {
-                'sfx': 0.2,    # Efeitos sonoros
-                'music': 0.2,  # Música de fundo
-                'master': 1.0  # Volume master
+                'sfx': 0.5,    # Efeitos sonoros
+                'music': 0.5,  # Música de fundo
+                'master': 0.5  # Volume master
             }
             
             # Configurar mixer
@@ -63,6 +62,13 @@ class Sound:
                     'channel': mixer.Channel(3),
                     'overlap': True,
                     'category': 'sfx'
+                },
+                # Música de fundo
+                'background_music': {
+                    'sound_key': os.path.join('res', 'neon.wav'),  # Caminho da música de fundo
+                    'channel': None,  # Música de fundo não usa canal específico
+                    'overlap': False,  # Não há sobreposição para a música
+                    'category': 'music'
                 }
             }
             
@@ -73,8 +79,15 @@ class Sound:
     
     def play(self, sound_key):
         sound = self._sounds[sound_key]
-        if sound['overlap'] or not sound['overlap'] and not sound['channel'].get_busy():
-            sound['channel'].play(sound['sound_key'])
+        if sound['category'] == 'music':
+            # Tocar música de fundo, verificando se já está tocando
+            if not mixer.music.get_busy():
+                mixer.music.load(sound['sound_key'])
+                mixer.music.play(-1, 0.0)  # Repetir a música indefinidamente
+        else:
+            # Tocar efeitos sonoros como antes
+            if sound['overlap'] or not sound['overlap'] and not sound['channel'].get_busy():
+                sound['channel'].play(sound['sound_key'])
     
     def set_volume(self, category, value):
         """Define o volume para uma categoria (0.0 a 1.0)"""
@@ -91,4 +104,7 @@ class Sound:
         for sound_info in self._sounds.values():
             category_vol = self._volume_settings[sound_info['category']]
             final_volume = master * category_vol
-            sound_info['sound_key'].set_volume(final_volume)
+            if sound_info['category'] == 'music':
+                mixer.music.set_volume(final_volume)  # Ajusta o volume da música de fundo
+            else:
+                sound_info['sound_key'].set_volume(final_volume)

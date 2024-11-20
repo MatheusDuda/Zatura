@@ -17,6 +17,8 @@ NUMBER_ASTEROIDS = 7
 class Game():
     def __init__(self):
         pygame.init()
+
+
         self.screen = pygame.display.set_mode(flags=pygame.FULLSCREEN, depth=COLOR_DEPTH)
         self.screen_rect = self.screen.get_rect()
         pygame.display.set_caption("Asteroids arcade game")
@@ -86,7 +88,6 @@ class Game():
                     elif event.type == QUIT:
                         done = True
                     elif event.type == NEW_GAME:
-                        print("NEW_GAME event recebido")  # Debug
                         self.new_game()
                     elif event.type in self.powerup_events:
                         self.handle_powerup_event(event)
@@ -113,7 +114,6 @@ class Game():
                     # Verificar se o jogador morreu
                     ship = self.galaxy.get_entity_by_name('ship')
                     if not ship:
-                        print("Nave destruída - reiniciando jogo")  # Debug
                         pygame.event.post(pygame.event.Event(NEW_GAME))
                     
                     pygame.display.flip()

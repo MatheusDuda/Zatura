@@ -49,6 +49,16 @@ class Ship(WEntity):
     def update(self, time_passed, event_list):
         super().update(time_passed, event_list)
 
+        if hasattr(self, 'rapid_fire') and self.rapid_fire:
+            self.rapid_fire_duration -= time_passed
+            if self.rapid_fire_duration <= 0:
+                self.rapid_fire = False
+        
+        if hasattr(self, 'triple_shot') and self.triple_shot:
+            self.triple_shot_duration -= time_passed
+            if self.triple_shot_duration <= 0:
+                self.triple_shot = False
+
         if self.galaxy.get_entity_by_name('score').game_status != GAME_RUNNING:
             return
 
@@ -100,10 +110,12 @@ class Ship(WEntity):
             self.wireframe = THRUST_WIREFRAME
             super().render(surface)
             self.wireframe = SHIP_WIREFRAME
+        
+        if self.shielded:
+            pygame.draw.circle(surface, BLUESHIELD, 
+                             (int(self.position.x), int(self.position.y)), 
+                             int(self.size * 6), 2)
 
-        if self.firing and self.can_fire:
-            Sound().play('fire')
-            
         if self.dying:
             Sound().play('bang')
             self.dying = False
@@ -119,6 +131,7 @@ class Ship(WEntity):
                     self.start_accelerating(FORWARD)
                 if event.key == K_SPACE:
                     self.fire()
+                    Sound().play('fire')
 
             if event.type == KEYUP:
                 if event.key == K_LEFT or event.key == K_a or \
