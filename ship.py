@@ -101,6 +101,7 @@ class Ship(WEntity):
     def create_blast(self, angle):
         blast = Blast(self.galaxy, Vector2(self.position), angle)
         self.galaxy.add_entity(blast)
+        Sound().play('fire')
 
     def render(self, surface):
         super().render(surface)
