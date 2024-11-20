@@ -34,6 +34,7 @@ class Score(Entity):
         for x in range(50, (self.num_lives*50)+1, 50):
             ship = Ship(self.galaxy)
             ship.position = Vector2(x, 160)
+            ship.shielded = False
             self.lives.append(ship)
 
         # start a new game
