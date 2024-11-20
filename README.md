@@ -1,5 +1,7 @@
 # Projeto Zatura
 
+https://github.com/user-attachments/assets/609b4c76-d281-489a-8f38-998aa2cc53ca
+
 ## 1. Tema e Conceito do Jogo
 
 **Tema:** Defesa da Terra contra Ameaças Espaciais
